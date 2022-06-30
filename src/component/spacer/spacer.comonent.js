@@ -1,6 +1,6 @@
-// import React from "react";
+import React from "react";
 // import { View } from "react-native";
-import styled from "styled-components/native";
+import styled, { useTheme } from "styled-components/native";
 
 // const TopSmall = styled.View`
 //   margin-top: ${(props) => props.theme.space[2]};
@@ -54,12 +54,22 @@ const positionVarriant = {
   right: "marginRight",
   bottom: "marginBottom",
 };
-const getVariant = (position, size) =>
-  `${positionVarriant[position]}: ${sizeVarriant[size]}`;
+const getVariant = (position, size, theme) => {
+  const sizeIndex = sizeVarriant[size];
+  const value = theme.space[sizeIndex];
+  return `${positionVarriant[position]}: ${value}`;
+};
 
-export const Spacer = styled.View`
-  ${({ position, size }) => getVariant(position, size)}
+const SpacerView = styled.View`
+  ${({ variant }) => variant}
 `;
+
+export const Spacer = ({ position, size, children }) => {
+  const theme = useTheme();
+  const variant = getVariant(position, size, theme);
+
+  return <SpacerView variant={variant}>{children}</SpacerView>;
+};
 
 Spacer.defaultProps = {
   position: "top",
